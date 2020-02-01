@@ -18,4 +18,6 @@ Route::get('/', function () {
 Route::group(['prefix'=>'Admin'],function(){
 	# 登录页面路由
 	Route::get('/login','Admin\LoginController@index');
+	# 验证码路由
+	Route::get('/code','Admin\LoginController@code');
 });

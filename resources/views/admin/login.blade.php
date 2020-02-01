@@ -30,6 +30,8 @@
             <hr class="hr15">
             <input name="code" lay-verify="required" placeholder="验证码"  type="text" class="layui-input" style="width: 150px;float: left;" {{$errors->has('captcha')?'parsley-error':''}}" name="captcha">
             <img src="{{captcha_src()}}" style="cursor: pointer" style="float: right;" onclick="this.src='{{captcha_src()}}'+Math.random()">
+            <!-- 自定义验证码类调用 -->
+            <!-- <img src="{{ url('Admin/code')}}" onclick="this.src='{{url('Admin/code')}}?'+Math.random()"> -->
             @if($errors->has('captcha'))
                 <div class="col-md-12">
                     <p class="text-danger text-left"><strong>{{$errors->first('captcha')}}</strong></p>
