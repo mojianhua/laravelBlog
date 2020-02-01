@@ -28,7 +28,15 @@
             <hr class="hr15">
             <input name="password" lay-verify="required" placeholder="密码"  type="password" class="layui-input">
             <hr class="hr15">
-            <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="submit">
+            <input name="code" lay-verify="required" placeholder="验证码"  type="text" class="layui-input" style="width: 150px;float: left;" {{$errors->has('captcha')?'parsley-error':''}}" name="captcha">
+            <img src="{{captcha_src()}}" style="cursor: pointer" style="float: right;" onclick="this.src='{{captcha_src()}}'+Math.random()">
+            @if($errors->has('captcha'))
+                <div class="col-md-12">
+                    <p class="text-danger text-left"><strong>{{$errors->first('captcha')}}</strong></p>
+                </div>
+            @endif
+            <hr class="hr15">
+            <input value="登录" lay-submit lay-filter="login" style="width:100%;" type="button">
             <hr class="hr20" >
         </form>
     </div>
@@ -42,10 +50,10 @@
               //   });
               //监听提交
               form.on('submit(login)', function(data){
-                // alert(888)
-                layer.msg(JSON.stringify(data.field),function(){
-                    location.href='index.html'
-                });
+                alert(888)
+                // layer.msg(JSON.stringify(data.field),function(){
+                //     location.href='index.html'
+                // });
                 return false;
               });
             });
