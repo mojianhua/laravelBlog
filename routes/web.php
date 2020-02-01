@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix'=>'Admin'],function(){
+	# 登录页面路由
+	Route::get('/login','Admin\LoginController@index');
+});
