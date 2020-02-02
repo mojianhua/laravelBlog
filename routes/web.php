@@ -17,7 +17,13 @@ Route::get('/', function () {
 
 Route::group(['prefix'=>'Admin'],function(){
 	# 登录页面路由
-	Route::get('/login','Admin\LoginController@index');
+	Route::get('/login','Admin\LoginController@Login');
+	# 登录逻辑
+	Route::post('/dologin','Admin\LoginController@doLogin');
 	# 验证码路由
 	Route::get('/code','Admin\LoginController@code');
+	# 加密
+	Route::get('/jiami','Admin\LoginController@jiami');
+	# 后台首页
+	Route::get('/index','Admin\LoginController@index');
 });
