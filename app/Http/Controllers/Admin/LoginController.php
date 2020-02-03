@@ -76,7 +76,19 @@ class LoginController extends Controller
 
     //后台首页
     public function index(){
-    	return '后台首页';
+    	return view('admin.index');
+    }
+
+    //后台欢迎页
+    public function welcome(){
+    	return view('admin.welcome');
+    }
+
+    //后台退成登录
+    public function loginOut(){
+    	//清空session
+    	session()->flush();
+    	return redirect('Admin/login');
     }
 
     // laravel加密

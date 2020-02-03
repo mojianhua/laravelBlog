@@ -15,15 +15,23 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix'=>'Admin'],function(){
-	# 登录页面路由
-	Route::get('/login','Admin\LoginController@Login');
-	# 登录逻辑
-	Route::post('/dologin','Admin\LoginController@doLogin');
-	# 验证码路由
-	Route::get('/code','Admin\LoginController@code');
-	# 加密
-	Route::get('/jiami','Admin\LoginController@jiami');
+Route::group(['prefix'=>'Admin','namespace'=>'Admin'],function(){
 	# 后台首页
-	Route::get('/index','Admin\LoginController@index');
+	Route::get('/login','LoginController@Login');
+	# 后台登录逻辑
+	Route::post('/dologin','LoginController@doLogin');
+	# 加密
+	Route::get('/jiami','LoginController@jiami');
+});
+
+//prefix表示url前缀，如：http://test.bloglaravel.com:8888/Admin/login中的Admin
+//namespace命名空间，将Admin\LoginController@code变成LoginController@code可直接访问
+//middleware中间件名
+Route::group(['prefix'=>'Admin','namespace'=>'Admin','middleware'=>'isLogin'],function(){
+	# 后台首页
+	Route::get('/index','LoginController@index');
+	# 欢迎页
+	Route::get('/welcome','LoginController@welcome');
+	# 退出登录
+	Route::get('/loginout','LoginController@loginOut');
 });
