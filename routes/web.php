@@ -34,6 +34,8 @@ Route::group(['prefix'=>'Admin','namespace'=>'Admin','middleware'=>'isLogin'],fu
 	Route::get('/welcome','LoginController@welcome');
 	# 退出登录
 	Route::get('/loginout','LoginController@loginOut');
-	# 用户操作
+	# 批量删除用户
+	Route::get('user/del','UserController@delAll');
+	# 用户模块
 	Route::resource('/user','UserController');
 });

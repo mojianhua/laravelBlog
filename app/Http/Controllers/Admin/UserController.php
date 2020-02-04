@@ -14,9 +14,29 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return view('admin.user.user_list');
+    public function index(Request $request)
+    {   
+        // 获取所有数据
+        // $user = User::get();
+
+        //分页获取数据
+        // $user = User::paginate(3);
+
+        $input = $request->all();
+        $user = User::OrderBy('user_id','asc')
+                ->where(function($query) use ($request){
+                    $user_name = $request->input('user_name');
+                    $email = $request->input('email');
+                    if(!empty($user_name)){
+                        $query->where('user_name','like','%'.$user_name.'%');
+                    }
+
+                    if(!empty($email)){
+                        $query->where('email','like','%'.$email.'%');
+                    }
+                })
+                ->paginate($request->input('num') ? $request->input('num') : 2);
+        return view('admin.user.user_list',compact('user','request'));
     }
 
     /**
@@ -68,7 +88,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        return view('admin.user.user_edit',compact('user'));
     }
 
     /**
@@ -80,7 +101,18 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find($id);
+        $user_name = $request->input('email');
+        $pass = Crypt::encrypt($request->input('pass'));
+        $user->user_name = $user_name;
+        $user->user_pass = $pass;
+        $res = $user->save();
+        if($res){
+            $msg = ['status'=>200,'msg'=>'修改成功'];
+        }else{
+            $msg = ['status'=>0,'msg'=>'修改失败'];
+        }
+        return $msg;
     }
 
     /**
@@ -91,6 +123,25 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::find($id);
+        $res = $user->delete();
+        if($res){
+            $msg = ['status'=>200,'msg'=>'删除成功'];
+        }else{
+            $msg = ['status'=>0,'msg'=>'删除失败'];
+        }
+        return $msg;
+    }
+
+    //批量删除用
+    public function delAll(Request $request){
+       $input = $request->input('ids');
+       $res = User::destroy($input);
+        if($res){
+            $msg = ['status'=>200,'msg'=>'删除成功'];
+        }else{
+            $msg = ['status'=>0,'msg'=>'删除失败'];
+        }
+        return $msg;
     }
 }
