@@ -4,53 +4,40 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Support\Facades\Crypt;
+use App\Models\Role;
 
-class UserController extends Controller
+class RoleController extends Controller
 {
     /**
-     * 用户列表
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   
-        // 获取所有数据
-        // $user = User::get();
-
-        //分页获取数据
-        // $user = User::paginate(3);
-
-        $input = $request->all();
-        $user = User::OrderBy('user_id','asc')
+    {   $input = $request->all();
+        $role = Role::OrderBy('id','asc')
                 ->where(function($query) use ($request){
-                    $user_name = $request->input('user_name');
-                    $email = $request->input('email');
-                    if(!empty($user_name)){
-                        $query->where('user_name','like','%'.$user_name.'%');
-                    }
-
-                    if(!empty($email)){
-                        $query->where('email','like','%'.$email.'%');
+                    $role_name = $request->input('role_name');
+                    if (!empty($role_name)){
+                        $query->where('role_name','like','%'.$role_name.'%');
                     }
                 })
-                ->paginate($request->input('num') ? $request->input('num') : 2);
-        return view('admin.user.user_list',compact('user','request'));
+                ->paginate($request->input('num') ? $request->input('num') : 3);
+        return view('admin.role.role_list',compact('role','request'));
     }
 
     /**
-     * 用户添加页面
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        return view('admin.user.user_add');
+        return view('admin.role.role_add');
     }
 
     /**
-     * 用户添加
+     * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -58,9 +45,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
-        $username = $input['email'];
-        $pass = Crypt::encrypt($input['pass']);
-        $res = User::create(['user_name'=>$username,'user_pass'=>$pass,'email'=>$username]);
+        $role_name = $input['role_name'];
+        $res = Role::create(['role_name'=>$role_name]);
         if($res){
             $msg = ['status'=>200,'msg'=>'添加成功'];
         }else{
@@ -81,19 +67,19 @@ class UserController extends Controller
     }
 
     /**
-     * 查看页码
+     * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $user = User::find($id);
-        return view('admin.user.user_edit',compact('user'));
+        $role = Role::find($id);
+        return view('admin.role.role_edit',compact('role'));
     }
 
     /**
-     * 用户修改
+     * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -101,30 +87,30 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
-        $user_name = $request->input('email');
-        $pass = Crypt::encrypt($request->input('pass'));
-        $user->user_name = $user_name;
-        $user->user_pass = $pass;
-        $res = $user->save();
+        $role = Role::find($id);
+        $role_name = $request->input('role_name');
+        $role->role_name = $role_name;
+        $res = $role->save();
         if($res){
             $msg = ['status'=>200,'msg'=>'修改成功'];
         }else{
             $msg = ['status'=>0,'msg'=>'修改失败'];
         }
         return $msg;
+
+
     }
 
     /**
-     * 用户删除
+     * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $user = User::find($id);
-        $res = $user->delete();
+        $role = Role::find($id);
+        $res = $role->delete();
         if($res){
             $msg = ['status'=>200,'msg'=>'删除成功'];
         }else{
@@ -136,7 +122,7 @@ class UserController extends Controller
     //批量删除
     public function delAll(Request $request){
        $input = $request->input('ids');
-       $res = User::destroy($input);
+       $res = Role::destroy($input);
         if($res){
             $msg = ['status'=>200,'msg'=>'删除成功'];
         }else{

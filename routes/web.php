@@ -38,4 +38,10 @@ Route::group(['prefix'=>'Admin','namespace'=>'Admin','middleware'=>'isLogin'],fu
 	Route::get('user/del','UserController@delAll');
 	# 用户模块
 	Route::resource('/user','UserController');
+	# 角色模块
+	# 批量删除角色
+	Route::get('role/del','RoleController@delAll');
+	# 创建rest风格命令
+	# php artisan make:controller Admin/RoleController --resource
+	Route::resource('/role','RoleController');
 });
