@@ -130,4 +130,9 @@ class RoleController extends Controller
         }
         return $msg;
     }
+
+    //授权
+    public function auth($id){
+        dd($id);
+    }
 }

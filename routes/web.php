@@ -41,6 +41,8 @@ Route::group(['prefix'=>'Admin','namespace'=>'Admin','middleware'=>'isLogin'],fu
 	# 角色模块
 	# 批量删除角色
 	Route::get('role/del','RoleController@delAll');
+	# 批量角色授权
+	Route::get('role/auth/{id}','RoleController@auth');
 	# 创建rest风格命令
 	# php artisan make:controller Admin/RoleController --resource
 	Route::resource('/role','RoleController');

@@ -75,12 +75,15 @@
                                       <a onclick="member_stop(this,'10001')" href="javascript:;"  title="启用">
                                         <i class="layui-icon">&#xe601;</i>
                                       </a>
+                                      <a title="授权"  onclick="xadmin.open('授权','{{ url('Admin/role/auth/'.$v->id) }}',600,400)" href="javascript:;">
+                                        <i class="layui-icon">&#xe631;</i>
+                                      </a>
                                       <a title="编辑"  onclick="xadmin.open('编辑','{{ url('Admin/role/'.$v->id.'/edit') }}',600,400)" href="javascript:;">
                                         <i class="layui-icon">&#xe642;</i>
                                       </a>
-                                      <a onclick="xadmin.open('修改密码','member-password.html',600,400)" title="修改密码" href="javascript:;">
+                                      <!-- <a onclick="xadmin.open('修改密码','member-password.html',600,400)" title="修改密码" href="javascript:;">
                                         <i class="layui-icon">&#xe631;</i>
-                                      </a>
+                                      </a> -->
                                       <a title="删除" onclick="member_del(this,'{{ $v->id }}')" href="javascript:;">
                                         <i class="layui-icon">&#xe640;</i>
                                       </a>
