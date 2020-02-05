@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Role;
+use App\Models\Permission;
+use DB;
 
 class RoleController extends Controller
 {
@@ -131,8 +133,35 @@ class RoleController extends Controller
         return $msg;
     }
 
-    //授权
+    //查看权限
     public function auth($id){
-        dd($id);
+        // 获取当前角色
+        $role = Role::find($id);
+        //权限列表
+        $perms = Permission::get();
+        // 获取当前角色拥有的权限
+        $own_pers = [];
+        $own_perms = $role->Permission;
+        foreach ($own_perms as $key => $value) {
+            $own_pers[] = $value->id;
+        }
+        return view('admin.role.auth',compact('role','perms','own_pers'));
+    }
+
+    //更新权限
+    public function doAuth(Request $request){
+        $input = $request->except('_token');
+        //删除权限
+        $role = DB::table('role_permission')->where('role_id',$input['role_id'])->delete();
+        foreach ($input['perssion_id'] as $key => $value) {
+            DB::table('role_permission')->insert(['role_id'=>$input['role_id'],'permission_id'=>$value]);
+        }
+        $res = 1;
+        if($res){
+            $msg = ['status'=>200,'msg'=>'更新成功'];
+        }else{
+            $msg = ['status'=>0,'msg'=>'更新失败'];
+        }
+        return $msg;
     }
 }
