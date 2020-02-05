@@ -37,7 +37,7 @@ class HasRole
         if(in_array($route['controller'], $per_arr)){
             return $next($request);
         }else{
-            echo "没权限";
+            //echo "没权限";
             return $next($request);
         }
     }

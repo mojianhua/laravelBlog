@@ -66,8 +66,8 @@
                                     <th>操作</th></tr>
                                 </thead>
                                 <tbody>
+                                  @foreach($user as $v)
                                   <tr>
-                                    @foreach($user as $v)
                                     <td>
                                       <input type="checkbox" name="id" value="{{$v->user_id}}"   lay-skin="primary"> 
                                     </td>
