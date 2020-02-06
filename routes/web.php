@@ -48,6 +48,12 @@ Route::group(['prefix'=>'Admin','namespace'=>'Admin','middleware'=>['isLogin','h
 	# 创建rest风格命令
 	# php artisan make:controller Admin/RoleController --resource
 	Route::resource('/role','RoleController');
-	# 分类路由
+	# 分类模块路由
 	Route::resource('/cate','CateController');
+	# markdown编辑器
+	Route::post('article/pre_mk','ArticleController@pre_mk');
+	# 文件上传
+	Route::post('/article/upload','ArticleController@upload');
+	# 文章模块路由
+	Route::resource('/article','ArticleController');
 });

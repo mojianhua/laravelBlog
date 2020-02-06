@@ -28,7 +28,7 @@ class CateController extends Controller
      */
     public function create()
     {
-        $cate = Cate::where('cate_pid',0)->get();
+        $cate = Cate::get();
         return view('admin.cate.cate_add',compact('cate'));
     }
 
