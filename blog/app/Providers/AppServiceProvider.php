@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Model\Cate;
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -14,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //        //获取所有的分类
+//        //获取所有的分类
 //        $cate = Cate::get();
 //        //存放一级类变量
 //        $cateone = [];
@@ -36,7 +35,6 @@ class AppServiceProvider extends ServiceProvider
 //        }
 ////        dd($cateone);
 ////        dd($catetwo);
-//        视图数据共享方法
 //        view()->share('cateone',$cateone);
 //        view()->share('catetwo',$catetwo);
     }
