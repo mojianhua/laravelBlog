@@ -56,4 +56,10 @@ Route::group(['prefix'=>'Admin','namespace'=>'Admin','middleware'=>['isLogin','h
 	Route::post('/article/upload','ArticleController@upload');
 	# 文章模块路由
 	Route::resource('/article','ArticleController');
+	# 将配置写入配置文件
+	Route::post('/config/putcontent','ConfigController@putcontent');
+	# 批量修改配置
+	Route::post('/config/changecontent','ConfigController@changecontent');
+	# 配置文件模块路由
+	Route::resource('/config','ConfigController');
 });

@@ -18,6 +18,8 @@
           <span class="layui-breadcrumb">
             <a href="">首页</a>
             <a href="">演示</a>
+           <a>
+          <cite>{{ config('webconfig.web_title') }}</cite></a>
             <a>
               <cite>导航元素</cite></a>
           </span>
@@ -38,7 +40,10 @@
                                   </select>  
                                 </div>
                                 <div class="layui-inline layui-show-xs-block">
-                                    <input type="text" name="art_title"  placeholder="请输入文章标题" autocomplete="off" class="layui-input" value="{{ $request->input('art_title') }}">
+                                    <input type="text" name="user_name"  placeholder="请输入用户名" autocomplete="off" class="layui-input" value="{{ $request->input('user_name') }}">
+                                </div>
+                                <div class="layui-inline layui-show-xs-block">
+                                    <input type="text" name="email"  placeholder="请输入邮箱" autocomplete="off" class="layui-input" value="{{ $request->input('email') }}">
                                 </div>
                                 <div class="layui-inline layui-show-xs-block">
                                     <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
@@ -47,48 +52,63 @@
                         </div>
                         <div class="layui-card-header">
                             <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除</button>
-                            <button class="layui-btn" onclick="xadmin.open('添加分类','{{ url('Admin/article/create') }}',600,400)"><i class="layui-icon"></i>添加</button>
+                            <button class="layui-btn" onclick="xadmin.open('添加配置','{{ url('Admin/conf/create') }}',600,400)"><i class="layui-icon"></i>添加</button>
                         </div>
                         <div class="layui-card-body layui-table-body layui-table-main">
-                            <table class="layui-table layui-form">
+                          <form action="{{ url('/Admin/config/changecontent') }}" method="post">
+                            <table class="layui-table">
                                 <thead>
                                   <tr>
                                     <th>
                                       <input type="checkbox" lay-filter="checkall" name="" lay-skin="primary">
                                     </th>
                                     <th>ID</th>
-                                    <th>文章标题</th>
-                                    <th>文章标签</th>
+                                    <th>配置标题</th>
+                                    <th>配置名称</th>
+                                    <th>配置内容</th>
+                                    <th>状态</th>
                                     <th>操作</th></tr>
                                 </thead>
                                 <tbody>
-                                  @foreach($article as $v)
+                                  @foreach($conf as $v)
                                   <tr>
                                     <td>
-                                      <input type="checkbox" name="id" value="$v['art_id']"   lay-skin="primary"> 
+                                      <input type="checkbox" name="id" value="{{$v->conf_id}}"   lay-skin="primary"> 
                                     </td>
-                                    <td>{{ $v['art_title'] }}</td>
-                                    <td>{{ $v['art_tag'] }}</td>
+                                    <input type="hidden" value="{{ $v->conf_id }}" name="conf_id[]">
+                                    <td>{{ $v->conf_id }}</td>
+                                    <td>{{ $v->conf_title }}</td>
+                                    <td>{{ $v->conf_name }}</td>
+                                    <td>{!! $v->conf_contents !!}</td>
                                     <td class="td-status">
                                       <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
                                     <td class="td-manage">
                                       <a onclick="member_stop(this,'10001')" href="javascript:;"  title="启用">
                                         <i class="layui-icon">&#xe601;</i>
                                       </a>
-                                      <a title="编辑"  onclick="xadmin.open('编辑','{{ url('Admin/article/'.$v['art_id'].'/edit') }}',600,400)" href="javascript:;">
+                                      <a title="编辑"  onclick="xadmin.open('编辑','{{ url('Admin/config/'.$v->conf_id.'/edit') }}',600,400)" href="javascript:;">
                                         <i class="layui-icon">&#xe642;</i>
                                       </a>
-                                      <!-- <a onclick="xadmin.open('修改密码','member-password.html',600,400)" title="修改密码" href="javascript:;">
+                                      <a onclick="xadmin.open('修改密码','member-password.html',600,400)" title="修改密码" href="javascript:;">
                                         <i class="layui-icon">&#xe631;</i>
-                                      </a> -->
-                                      <a title="删除" onclick="member_del(this,'{{ $v['art_id'] }}')" href="javascript:;">
+                                      </a>
+                                      <a title="删除" onclick="member_del(this,'{{ $v->conf_id }}')" href="javascript:;">
                                         <i class="layui-icon">&#xe640;</i>
                                       </a>
                                     </td>
                                   </tr>
                                 @endforeach
+                                <tr>
+                                  <td colspan="6">
+                                    {{ csrf_field() }}
+                                    <button  class="layui-btn" lay-filter="add" lay-submit="">
+                                      批量修改
+                                    </button>
+                                  </td>
+                                </tr>
                                 </tbody>
                             </table>
+                        </form>
                         </div>
                         <div class="layui-card-body ">
                             <div class="page">
@@ -161,7 +181,7 @@
       function member_del(obj,id){
           layer.confirm('确认要删除吗？',function(index){
               //发异步删除数据
-              $.post('/Admin/article/'+id,{"_method":"delete","_token":"{{csrf_token()}}"},function(data){
+              $.post('/Admin/user/'+id,{"_method":"delete","_token":"{{csrf_token()}}"},function(data){
                   console.log(data);
                   if(data.status == 200){
                     $(obj).parents("tr").remove();
@@ -189,7 +209,7 @@
   
         layer.confirm('确认要删除吗？'+ids.toString(),function(index){
             //捉到所有被选中的，发异步进行删除
-            $.get('/Admin/article/del',{"ids":ids},function(data){
+            $.get('/Admin/user/del',{"ids":ids},function(data){
               if(data.status == 200){
                 layer.msg(data.msg,{icon:1,time:1000});
                 $(".layui-form-checked").not('.header').parents('tr').remove();

@@ -139,4 +139,11 @@
 		16.2.2：在.evn更新七牛配置
 	16.3：使用方法
 		查看laravelBlog项目里面的ArticleController的pre_mk方法
+17、安装redis扩展
+	17.1：安装
+		composer require "predis/predis:~1.0"
+	17.2：修改redis配置
+		文件配置在config/database.php
+	17.3：使用方法
+		查看laravelBlog项目里面的ArticleController的index方法
 

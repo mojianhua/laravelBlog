@@ -11,6 +11,7 @@ use Markdown;
 use App\Services\OSS;
 # 七牛配置
 use Illuminate\Support\Facades\Storage;
+use Redis;
 
 class ArticleController extends Controller
 {
@@ -21,15 +22,37 @@ class ArticleController extends Controller
      */
     public function index(Request $request)
     {
-        $input = $request->all();
-        $article = Article::OrderBy('art_id','asc')
-                ->where(function($query) use ($request){
-                    $art_title = $request->input('art_title');
-                    if(!empty($art_title)){
-                        $query->where('art_title','like','%'.$art_title.'%');
-                    }
-                })
-                ->paginate($request->input('num') ? $request->input('num') : 2);
+        $listKey = "LIST:ARTICLE";
+        $haskKey = "HASH:ARTICLE";
+
+        //文章数据是否存在redis
+        if(Redis::exists($listKey)){
+            $article = [];
+            //所有文章的id
+            $lists = Redis::lrange($listKey,0,-1);
+            foreach ($lists as $key => $value) {
+                $article[] = Redis::hgetall($haskKey.$value);
+            }
+        }else{
+            $article = Article::get()->toArray();
+            foreach ($article as $key => $value) {
+                //文件id存入listKey
+                Redis::rpush($listKey,$value['art_id']);
+                //文章数据存入HashKey
+                Redis::hmset($haskKey.$value['art_id'],$value);
+            }
+        }
+
+        //$input = $request->all();
+        // $article = Article::OrderBy('art_id','asc')
+        //         ->where(function($query) use ($request){
+        //             $art_title = $request->input('art_title');
+        //             if(!empty($art_title)){
+        //                 $query->where('art_title','like','%'.$art_title.'%');
+        //             }
+        //         })
+        //         ->paginate($request->input('num') ? $request->input('num') : 2);
+
         return view('admin.article.article_list',compact('article','request'));
     }
 
